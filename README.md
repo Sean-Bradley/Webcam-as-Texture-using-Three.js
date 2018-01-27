@@ -1,8 +1,6 @@
 ## Welcome to GitHub Pages
 
-You can use the [editor on GitHub](https://github.com/Sean-Bradley/Webcam-as-Texture-using-Three.js/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
-
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+Create a box in three.js and use the web cam video as the texture 
 
 ### Markdown
 
