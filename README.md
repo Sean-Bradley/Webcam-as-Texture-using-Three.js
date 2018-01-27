@@ -1,4 +1,4 @@
-# Webcam-as-Texture-using-Three.js 
+# Webcam as Texture using Three.js 
  
 This html creates a 3d cube in three.js and use the webcam video as the texture.
 
