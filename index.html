@@ -15,19 +15,29 @@
             overflow: hidden;
         }
 
-        container {
-            border: 1px solid red;
+        #canvas {
+            visibility: hidden;
         }
     </style>
+    <script type="text/javascript" src="seriously/seriously.js"></script>
+    <script type="text/javascript" src="seriously/effects/seriously.chroma.js"></script>
+    <script type="text/javascript" src="js/dat.gui.min.js"></script>
+    <script type="text/javascript" src="js/three.min.js"></script>
+    <script type="text/javascript" src="js/controls/OrbitControls.js"></script>
 </head>
 
 <body>
     <div id="container"></div>
-    <video id="webcam" autoplay width="640" height="480" style="visibility: hidden; float:left;"></video>
-    <canvas id="canvas" width="640" height="480" style="visibility: hidden; float:left;"></canvas>
-    <script src="js/three.min.js"></script>
+    <video id="webcam" autoplay width="640" height="480" style="visibility: hidden;"></video>
+    <canvas id="canvas" width="640" height="480"></canvas>
 
-    <script src="js/controls/OrbitControls.js"></script>
+    <input id="input-chroma-screen">
+    <input type="number" min="0" step="0.01" id="input-chroma-weight">
+    <input type="range" min="0" max="1" step="0.01" id="input-chroma-balance">
+    <input type="range" min="0" max="1" step="0.01" id="input-chroma-clipBlack">
+    <input type="range" min="0" max="1" step="0.01" id="input-chroma-clipWhite">
+
+
 
     <script>
         navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
@@ -68,6 +78,12 @@
         var webcam;
         var webcamTexture;
 
+        var seriously = new Seriously();
+        var chroma;
+        var videoSource;
+        var target;
+
+
         init();
         animate();
 
@@ -81,10 +97,10 @@
             camera.position.set(0, 0, 100);
             camera.lookAt(scene.position);
 
-            renderer = new THREE.WebGLRenderer();
+            renderer = new THREE.WebGLRenderer({ });
             renderer.setClearColor(0x00ff00);
             renderer.setPixelRatio(window.devicePixelRatio);
-            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setSize(width, height);
 
             container = document.getElementById('container');
             container.appendChild(renderer.domElement);
@@ -93,25 +109,41 @@
 
             controls = new THREE.OrbitControls(camera, renderer.domElement);
 
-            webcam = document.getElementById('webcam');
-
             canvas = document.getElementById('canvas');
-            canvasCtx = canvas.getContext('2d');
-            canvasCtx.fillStyle = '#000000';
-            canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
 
             webcamTexture = new THREE.Texture(canvas);
             webcamTexture.minFilter = THREE.LinearFilter;
             webcamTexture.magFilter = THREE.LinearFilter;
 
             var geometry = new THREE.BoxGeometry(1, 1, 1);
-            var material = new THREE.MeshBasicMaterial({ map: webcamTexture, overdraw: true, side: THREE.FrontSide });
+            var material = new THREE.MeshBasicMaterial({ map: webcamTexture, overdraw: true, side: THREE.FrontSide, transparent: true, opacity: 1.0 });
             var cube = new THREE.Mesh(geometry, material);
             cube.position.set(0, 0, 0);
             cube.scale.x = 32;
             cube.scale.y = 24;
             cube.scale.z = 32;
             scene.add(cube);
+
+            //chroma key shader from seriously.js
+            videoSource = seriously.source(camvideo);
+            target = seriously.target(canvas);
+            chroma = seriously.effect('chroma');
+            chroma.source = videoSource;
+            target.source = chroma;
+            seriously.go();
+
+            //dat gui
+            var gui = new dat.GUI();
+            chroma.screen = [0, 255, 0, 1];
+            gui.addColor(chroma, 'screen');
+            chroma.weight = 0.0;            
+            gui.add(chroma, 'weight', 0.0, 1.0);
+            chroma.balance = 0.0; 
+            gui.add(chroma, 'balance', 0.0, 1.0);
+            chroma.clipBlack = 1.0; 
+            gui.add(chroma, 'clipBlack', 0.0, 1.0);
+            chroma.clipWhite = 0.9; 
+            gui.add(chroma, 'clipWhite', 0.0, 1.0);
         }
 
 
@@ -126,11 +158,15 @@
 
         function animate() {
             requestAnimationFrame(animate);
-            if (webcam.readyState === webcam.HAVE_ENOUGH_DATA) {
-                canvasCtx.drawImage(webcam, 0, 0, canvas.width, canvas.height);
-                if (webcamTexture)
-                    webcamTexture.needsUpdate = true;
-            }
+            //if (webcam.readyState === webcam.HAVE_ENOUGH_DATA) {
+            //    canvasCtx.drawImage(webcam, 0, 0, canvas.width, canvas.height);
+            //    if (webcamTexture)
+            //        webcamTexture.needsUpdate = true;
+            //}
+
+
+            webcamTexture.needsUpdate = true;
+
 
             renderer.render(scene, camera);
             controls.update();
