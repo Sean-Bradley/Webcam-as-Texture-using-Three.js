@@ -12,5 +12,6 @@ https://www.youtube.com/watch?v=SdYf4OvnVxY
 
 ## -- Update --
 Added chroma option from the seriously.js library so chroma keying can also be applied at the webcam capture level.
+*Settings shown work best for my situation. You will need to adjust for your own environment.*
 ![With CHROMA on and off](chromaOnOff.gif )
 
