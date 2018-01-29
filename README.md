@@ -12,3 +12,7 @@ https://sean-bradley.github.io/Webcam-as-Texture-using-Three.js/
 ## Video Tutorial on how to use this page with OBS
 https://www.youtube.com/watch?v=SdYf4OvnVxY
 
+## -- Update --
+Added chroma option from the seriously.js library so chroma can also be applied at the webcam capture level.
+![With CHROMA on and off](chromaOnOff.gif )
+
