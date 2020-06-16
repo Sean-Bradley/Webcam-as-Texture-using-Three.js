@@ -27,7 +27,8 @@
 </head>
 
 <body>
-    <a href="https://github.com/Sean-Bradley"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_left_orange_ff7600.png" alt="Fork me on GitHub"></a>
+    <a href="https://github.com/Sean-Bradley"><img style="position: absolute; top: 0; left: 0; border: 0;"
+            src="https://s3.amazonaws.com/github/ribbons/forkme_left_orange_ff7600.png" alt="Fork me on GitHub"></a>
     <div id="container"></div>
     <video id="webcam" autoplay width="640" height="480" style="visibility: hidden;"></video>
     <canvas id="canvas" width="640" height="480"></canvas>
@@ -41,30 +42,36 @@
 
 
     <script>
-        navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
-        window.URL = window.URL || window.webkitURL;
+        navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia ||
+            navigator.msGetUserMedia;
+        window.URL = window.URL || window.webkitURL || window.mozURL || window.msURL;
+
 
         var camvideo = document.getElementById('webcam');
 
-        if (!navigator.getUserMedia) {
-            alert('Sorry. <code>navigator.getUserMedia()</code> is not available.');
+        if (navigator.getUserMedia) {
+            navigator.getUserMedia({
+                video: true
+            }, gotStream, noStream);
         } else {
-            navigator.getUserMedia({ video: true }, gotStream, noStream);
+            alert('Sorry. <code>navigator.getUserMedia()</code> is not available.');
         }
 
         function gotStream(stream) {
-            if (window.URL) { camvideo.src = window.URL.createObjectURL(stream); }
-            else // Opera
-            { camvideo.src = stream; }
+            camvideo.srcObject = stream;
 
-            camvideo.onerror = function (e) { stream.stop(); };
+            camvideo.onerror = function (e) {
+                stream.stop();
+            };
 
             stream.onended = noStream;
         }
 
         function noStream(e) {
             var msg = 'No camera available.';
-            if (e.code == 1) { msg = 'User denied access to use camera.'; }
+            if (e.code == 1) {
+                msg = 'User denied access to use camera.';
+            }
             alert(msg);
         }
 
@@ -98,7 +105,7 @@
             camera.position.set(0, 0, 100);
             camera.lookAt(scene.position);
 
-            renderer = new THREE.WebGLRenderer({ });
+            renderer = new THREE.WebGLRenderer({});
             renderer.setClearColor(0x00ff00);
             renderer.setPixelRatio(window.devicePixelRatio);
             renderer.setSize(width, height);
@@ -117,7 +124,13 @@
             webcamTexture.magFilter = THREE.LinearFilter;
 
             var geometry = new THREE.BoxGeometry(1, 1, 1);
-            var material = new THREE.MeshBasicMaterial({ map: webcamTexture, overdraw: true, side: THREE.FrontSide, transparent: true, opacity: 1.0 });
+            var material = new THREE.MeshBasicMaterial({
+                map: webcamTexture,
+                overdraw: true,
+                side: THREE.FrontSide,
+                transparent: true,
+                opacity: 1.0
+            });
             var cube = new THREE.Mesh(geometry, material);
             cube.position.set(0, 0, 0);
             cube.scale.x = 32;
@@ -137,13 +150,13 @@
             var gui = new dat.GUI();
             chroma.screen = [0, 255, 0, 1];
             gui.addColor(chroma, 'screen');
-            chroma.weight = 0.0;            
+            chroma.weight = 0.0;
             gui.add(chroma, 'weight', 0.0, 1.0);
-            chroma.balance = 0.0; 
+            chroma.balance = 0.0;
             gui.add(chroma, 'balance', 0.0, 1.0);
-            chroma.clipBlack = 1.0; 
+            chroma.clipBlack = 1.0;
             gui.add(chroma, 'clipBlack', 0.0, 1.0);
-            chroma.clipWhite = 0.9; 
+            chroma.clipWhite = 0.9;
             gui.add(chroma, 'clipWhite', 0.0, 1.0);
         }
 
@@ -172,7 +185,6 @@
             renderer.render(scene, camera);
             controls.update();
         }
-
     </script>
 
 </body>
