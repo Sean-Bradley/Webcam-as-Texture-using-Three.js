@@ -1,6 +1,6 @@
 # Webcam as Texture using Three.js 
  
-> To help support this TypeScript boilerplate, please take a moment to look at my official TypeScript courses in <br/>  
+> To help support this project, please take a moment to look at my official TypeScript courses in <br/>  
 <img src="docs/threejs-course-image-43x24.gif" style="margin-bottom:-4px"> [Three.js and TypeScript](https://www.udemy.com/course/threejs-tutorials/?referralCode=4C7E1DE91C3E42F69D0F) and <br/>  
 <img src="docs/tssock-course_43x24.gif" style="margin-bottom:-4px"> [Socket.IO and TypeScript](https://www.udemy.com/course/typescript-socketio/?referralCode=2F6E227AC7EB9D147327)
 
