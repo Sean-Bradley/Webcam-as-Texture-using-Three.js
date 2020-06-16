@@ -86,8 +86,6 @@
         var webcam;
         var webcamTexture;
 
-        var cube
-
         var seriously = new Seriously();
         var chroma;
         var videoSource;
@@ -133,11 +131,13 @@
                 transparent: true,
                 opacity: 1.0
             });
-            cube = new THREE.Mesh(geometry, material);
+            var cube = new THREE.Mesh(geometry, material);
             cube.position.set(0, 0, 0);
             cube.scale.x = 32;
             cube.scale.y = 24;
             cube.scale.z = 32;
+            cube.rotation.x += 1;
+            cube.rotation.y += .5;
             scene.add(cube);
 
             //chroma key shader from seriously.js
@@ -174,17 +174,8 @@
 
         function animate() {
             requestAnimationFrame(animate);
-            //if (webcam.readyState === webcam.HAVE_ENOUGH_DATA) {
-            //    canvasCtx.drawImage(webcam, 0, 0, canvas.width, canvas.height);
-            //    if (webcamTexture)
-            //        webcamTexture.needsUpdate = true;
-            //}
-
 
             webcamTexture.needsUpdate = true;
-
-            cube.rotation.x += 0.01;
-            cube.rotation.y += 0.01;
 
             renderer.render(scene, camera);
             controls.update();
