@@ -86,6 +86,8 @@
         var webcam;
         var webcamTexture;
 
+        var cube
+
         var seriously = new Seriously();
         var chroma;
         var videoSource;
@@ -131,7 +133,7 @@
                 transparent: true,
                 opacity: 1.0
             });
-            var cube = new THREE.Mesh(geometry, material);
+            cube = new THREE.Mesh(geometry, material);
             cube.position.set(0, 0, 0);
             cube.scale.x = 32;
             cube.scale.y = 24;
